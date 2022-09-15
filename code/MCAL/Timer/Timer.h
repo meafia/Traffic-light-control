@@ -11,13 +11,16 @@
 
 #include "../../Utilities/types.h"
 
-#define TIMER0_OVF_vect  __vector_11
-
+/* TIMER0 registers */
 #define TCCR0 (*(volatile uint8_t*) 0x53)
 #define TCNT0 (*(volatile uint8_t*) 0x52)
 #define TIMSK0 (*(volatile uint8_t*) 0x59)
 #define TIFR0 (*(volatile uint8_t*) 0x58)
 #define OCR0 (*(volatile uint8_t*) 0x5C)
+
+/* TIMER0 Vectors */
+#define TIMER0_OVF_vect  __vector_11
+
 
 typedef enum
 {
@@ -46,7 +49,7 @@ typedef enum
 }TIMER0PinMode_t;
 
 void Timer0_Start(TIMER0Prescaler_t prescaler);
-void Timer0_with_interrupt_initialization(TIMER0PinMode_t pin_mode);
+void Timer0_with_interrupt_initialization();
 void Timer0_with_interrupt_set_delay(uint32_t delay);
 void Timer0_Stop(void);
 

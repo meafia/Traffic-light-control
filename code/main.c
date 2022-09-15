@@ -9,9 +9,9 @@
 
 #include "Application/app.h"
 
+
 int main(void)
 {
-    /* Replace with your application code */
 	
 	TrafficLightApp_init();
     while (1) 

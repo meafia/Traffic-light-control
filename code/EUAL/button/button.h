@@ -10,6 +10,6 @@
 
 #include "../../MCAL/DIO/DIO.h"
 
-//void button_init(Port_t port, uint8_t pinNumber);
+void button_init(Port_t port, uint8_t pinNumber);
 
 #endif /* BUTTON_H_ */

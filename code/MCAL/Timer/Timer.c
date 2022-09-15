@@ -14,7 +14,7 @@ uint32_t globalPrescaler = 0;
 uint32_t OVFNum = 0;
 uint32_t initval = 0;
 
-void Timer0_with_interrupt_initialization(TIMER0PinMode_t pin_mode){
+void Timer0_with_interrupt_initialization(){
 	cli();
 	/* normal mode */
 	TCCR0 &= ~(1<<3); //clear WGM01
@@ -86,8 +86,6 @@ void Timer0_Stop(void)
 	TCCR0 &= ~(1<<0); //clear CS00
 	TCCR0 &= ~(1<<1); //clear CS01
 	TCCR0 &= ~(1<<2); //clear CS02
-	TCCR0 |= (1<<0); //set CS00
-	TCCR0 |= (1<<1); //set CS01
-	TCCR0 |= (1<<2); //set CS02
+
 	globalPrescaler = 0;
 }

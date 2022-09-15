@@ -5,14 +5,25 @@
  *  Author: Mohamed
  */ 
 #include "app.h"
-#include "../MCAL/Interrupt/Interrupt.h"
-#include "../MCAL/Timer/Timer.h"
+
+//#include <util/delay.h>
 
 appMode_t mode = normal;
+trafficLightState_t currentState = carReady;
+
+
+void resetAllLEDs(void){
+	LED_off(PORT_A, 0);
+	LED_off(PORT_A, 1);
+	LED_off(PORT_A, 2);
+	LED_off(PORT_B, 0);
+	LED_off(PORT_B, 1);
+	LED_off(PORT_B, 2);
+}
 
 void TrafficLightApp_init(void){
 	// button initialization
-	// DDRD |= (1<<2);
+	button_init(PORT_D, 2);
 	/* initialization of car's traffic lights */
 	LED_init(PORT_A, 0);
 	LED_init(PORT_A, 1);
@@ -28,22 +39,61 @@ void TrafficLightApp_init(void){
 	INT0_init();
 	
 	/* initialization of interrupt 0 */
-	Timer0_with_interrupt_initialization(PIN_Set);
-	Timer0_with_interrupt_set_delay(10);
+	Timer0_with_interrupt_initialization();
+	Timer0_with_interrupt_set_delay(20);
 	
 }
 void TrafficLightApp(void){
 	switch(mode){
 		case normal:
-			LED_on(PORT_A, 2);
-			LED_off(PORT_A, 1);
+			resetAllLEDs();
+			if( mode != pedestriansPiriority){
+				currentState = carReady;
+				for(int i = 0; i <= 5; i++){
+					LED_toggle(PORT_A, 1);
+					LED_toggle(PORT_B, 1);
+					//_delay_ms(1000);
+				}
+			}
+			if( mode != pedestriansPiriority){
+				currentState = carstop;
+				LED_on(PORT_A, 2);
+				LED_on(PORT_B, 0);
+				//_delay_ms(5000);
+				LED_off(PORT_A, 2);
+				LED_off(PORT_B, 0);
+			}
+			if( mode != pedestriansPiriority){
+				currentState = carReady;
+				for(int i = 0; i <= 5; i++){
+					LED_toggle(PORT_A, 1);
+					LED_toggle(PORT_B, 1);
+					//_delay_ms(1000);
+				}
+			}
+			if( mode != pedestriansPiriority){
+				currentState = carGo;
+				LED_on(PORT_A, 0);
+				LED_on(PORT_B, 2);
+				//_delay_ms(5000);
+				LED_off(PORT_A, 0);
+				LED_off(PORT_B, 2);
+			}
 			break;
 		case pedestriansPiriority:
-			LED_on(PORT_A, 2);
-			LED_on(PORT_B, 0);
+			resetAllLEDs();
+			if(currentState == carReady || currentState == carstop){
+				LED_on(PORT_A, 2); // keep car red led on
+				LED_on(PORT_B, 0); // pedestrians green led
+			}
+			if(currentState == carGo){
+				mode = normal;
+			}
 			break;
 	}
 }
+
+
 
 ISR(EXT_INT_0){
 	mode = pedestriansPiriority;

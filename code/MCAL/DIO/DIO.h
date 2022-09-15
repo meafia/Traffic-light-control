@@ -11,6 +11,7 @@
 
 #include "../../Utilities/types.h"
 
+/* DIO registers */
 #define PORTA (*(volatile uint8_t*) 0x3B)
 #define DDRA (*(volatile uint8_t*) 0x3A)
 #define PINA (*(volatile uint8_t*) 0x39)

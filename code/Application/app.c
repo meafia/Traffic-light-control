@@ -5,11 +5,11 @@
  *  Author: Mohamed
  */ 
 #include "app.h"
-
-//#include <util/delay.h>
+#include <util/delay.h>
 
 appMode_t mode = normal;
 trafficLightState_t currentState = carReady;
+int numberOfOverflow = 0; 
 
 
 void resetAllLEDs(void){
@@ -85,6 +85,7 @@ void TrafficLightApp(void){
 			if(currentState == carReady || currentState == carstop){
 				LED_on(PORT_A, 2); // keep car red led on
 				LED_on(PORT_B, 0); // pedestrians green led
+				//_delay_ms(1000);
 			}
 			if(currentState == carGo){
 				mode = normal;
@@ -97,10 +98,14 @@ void TrafficLightApp(void){
 
 ISR(EXT_INT_0){
 	mode = pedestriansPiriority;
-	Timer0_Start(TIMER0_Prescaler_256);
+	Timer0_Start(TIMER0_Prescaler_1024);
 }
 
 ISR(TIMER0_OVF_vect){
-	mode = normal;
-	Timer0_Stop();
+	numberOfOverflow++;
+	if(numberOfOverflow >= 20){
+		mode = normal;
+		Timer0_Stop();
+		numberOfOverflow = 0;
+	}	
 }
